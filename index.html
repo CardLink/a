@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     * {
@@ -434,16 +435,29 @@
       transform: translateY(0);
     }
 
-    .qr img {
-      width: 116px;
-      height: 116px;
+    #qrCodeBox {
+      width: 132px;
+      height: 132px;
+      margin: 0 auto;
+      padding: 8px;
       border-radius: 18px;
       background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,238,241,0.99));
-      padding: 8px;
       border: 1px solid rgba(255,255,255,0.82);
       box-shadow:
         0 16px 30px rgba(119, 89, 101, 0.14),
         inset 0 1px 0 rgba(255,255,255,0.97);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #qrCodeBox img,
+    #qrCodeBox canvas {
+      width: 116px !important;
+      height: 116px !important;
+      border-radius: 10px;
+      display: block;
+      background: #fff;
     }
 
     .footer {
@@ -547,13 +561,24 @@
       .insta {
         font-size: 14px;
       }
+
+      #qrCodeBox {
+        width: 124px;
+        height: 124px;
+      }
+
+      #qrCodeBox img,
+      #qrCodeBox canvas {
+        width: 108px !important;
+        height: 108px !important;
+      }
     }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="top-row">
-      <div class="badge">Премиальная цифровая визитка</div>
+      <div class="badge">Business Card</div>
 
       <div class="top-actions">
         <button class="top-btn" onclick="sharePage()" aria-label="Поделиться">
@@ -630,7 +655,7 @@
     </a>
 
     <div class="qr" id="qr">
-      <img src="" id="qrImg" alt="QR-код">
+      <div id="qrCodeBox"></div>
     </div>
 
     <div class="footer">
@@ -639,6 +664,8 @@
   </div>
 
   <script>
+    let qrGenerated = false;
+
     function sharePage() {
       if (navigator.share) {
         navigator.share({
@@ -655,10 +682,16 @@
 
     function toggleQR() {
       const qr = document.getElementById('qr');
-      const img = document.getElementById('qrImg');
+      const qrBox = document.getElementById('qrCodeBox');
 
-      if (!img.src) {
-        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(window.location.href);
+      if (!qrGenerated) {
+        qrBox.innerHTML = '';
+        new QRCode(qrBox, {
+          text: window.location.href,
+          width: 116,
+          height: 116
+        });
+        qrGenerated = true;
       }
 
       if (qr.classList.contains('show')) {
